@@ -39,6 +39,11 @@ The project is designed to run on your local computer, provided you have met the
 
 1) Install the above mentioned pre-requisites in your local
 
+```bash
+git clone https://github.com/Azure-Samples/azure-functions-java-flex-consumption-azd.git
+cd /http/src
+```
+
 2) Add this local.settings.json file to this folder to simplify local development
 
 ```bash
@@ -50,7 +55,7 @@ The project is designed to run on your local computer, provided you have met the
     }
 }
 ```
-3) Open a new terminal and do the following to do a clean build:
+3) Open a new terminal, remain in the path '/http/src' and do the following to do a clean build:
 
 ```bash
 mvn clean package
@@ -110,6 +115,8 @@ To provision all resources:
 You will be prompted for Azure subscription, and an Azure location.
 
 ```bash
+cd /azure-functions-java-flex-consumption-azd
+
 azd provision -e "<provide_environment_name>"
 ```
 Make a note of AZURE_FUNCTION_NAME from .azure/<environment_name>/.env file
