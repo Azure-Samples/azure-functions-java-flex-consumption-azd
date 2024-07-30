@@ -1,0 +1,10 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: starter-java-flex-func
+metadata:
+  template: starter-java-flex-func@0.0.2-beta
+services:
+  processor:
+    project: ./http/
+    language: java
+    host: function
