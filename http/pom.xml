@@ -14,7 +14,7 @@
         <java.version>17</java.version>
         <azure.functions.maven.plugin.version>1.36.0</azure.functions.maven.plugin.version>
         <azure.functions.java.library.version>2.2.0</azure.functions.java.library.version>
-        <functionAppName>enter your function name</functionAppName>
+        <functionAppName>contoso-functions</functionAppName>
     </properties>
 
     <dependencies>
