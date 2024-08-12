@@ -30,7 +30,6 @@ The project is designed to run on your local computer, provided you have met the
 
 ### Prerequisites
 
-
 + [Azure Functions Core Tools](https://learn.microsoft.com/azure/azure-functions/functions-run-local?tabs=v4%2Cmacos%2Ccsharp%2Cportal%2Cbash#install-the-azure-functions-core-tools)
 + Install Maven version 3.0 or above 
 + [Java Developer Kit](https://learn.microsoft.com/en-us/azure/developer/java/fundamentals/java-support-on-azure), version 8, 11, 17, 21(Linux only). The JAVA_HOME environment variable must be set to the install location of the correct version of the JDK
@@ -41,7 +40,7 @@ The project is designed to run on your local computer, provided you have met the
 
 ```bash
 git clone https://github.com/Azure-Samples/azure-functions-java-flex-consumption-azd.git
-cd /http/src
+cd /http
 ```
 
 2) Add this local.settings.json file to this folder to simplify local development
@@ -55,7 +54,7 @@ cd /http/src
     }
 }
 ```
-3) Open a new terminal, remain in the path '/http/src' and do the following to do a clean build:
+3) Open a new terminal, remain in the path '/http' and do the following to do a clean build:
 
 ```bash
 mvn clean package
@@ -106,10 +105,10 @@ public class Function {
 
 ```
 
-
 ## Deploy to Azure
 
-The easiest way to deploy this app is using the [Azure Dev CLI aka AZD](https://aka.ms/azd).  If you open this repo in GitHub CodeSpaces the AZD tooling is already preinstalled.
+### Provision the Azure resources
+The easiest way to provision this app is using the [Azure Dev CLI aka AZD](https://aka.ms/azd). If you open this repo in GitHub CodeSpaces the AZD tooling is already preinstalled.
 
 To provision all resources:
 You will be prompted for Azure subscription, and an Azure location.
@@ -128,6 +127,6 @@ export AZURE_FUNCTION_NAME=<function_name_env_file>
 ### To Deploy the application:
 
 ```bash
-cd target/azure-functions/<function_name_folder>
+cd http/target/azure-functions/contoso-functions
 func azure functionapp publish $AZURE_FUNCTION_NAME
 ```
