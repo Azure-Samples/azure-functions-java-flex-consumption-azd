@@ -1,5 +1,5 @@
 ---
-description: This sample template provides a basic Azure Functions project in Java (HTTP triggers) that's ready to run locally and can be easily deployed to Azure Functions Flex Consumption.
+description: This repository contains an Azure Functions HTTP trigger quickstart written in Java and deployed to Azure Functions Flex Consumption using the Azure Developer CLI (AZD). This sample uses managed identity and a virtual network to insure it is secure by default.
 page_type: sample
 products:
 - azure-functions
