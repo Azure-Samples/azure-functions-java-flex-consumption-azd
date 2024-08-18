@@ -1,5 +1,7 @@
 package com.contoso;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.azure.functions.ExecutionContext;
 import com.microsoft.azure.functions.HttpMethod;
 import com.microsoft.azure.functions.HttpRequestMessage;
@@ -16,28 +18,55 @@ import java.util.Optional;
  */
 public class Function {
     /**
-     * This function listens at endpoint "/api/HttpExample". Two ways to invoke it using "curl" command in bash:
-     * 1. curl -d "HTTP Body" {your host}/api/HttpExample
-     * 2. curl "{your host}/api/HttpExample?name=HTTP%20Query"
+     * This function listens at endpoint "/api/httpget". Invoke it using "curl" command in bash:
+     * curl "http://localhost:7071/api/httpget?name=Awesome%20Developer"
      */
-    @FunctionName("HttpExample")
+    @FunctionName("httpget")
     public HttpResponseMessage run(
             @HttpTrigger(
                 name = "req",
-                methods = {HttpMethod.GET, HttpMethod.POST},
-                authLevel = AuthorizationLevel.ANONYMOUS)
+                methods = {HttpMethod.GET},
+                authLevel = AuthorizationLevel.FUNCTION)
                 HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
         context.getLogger().info("Java HTTP trigger processed a request.");
 
         // Parse query parameter
-        final String query = request.getQueryParameters().get("name");
-        final String name = request.getBody().orElse(query);
+        String name = Optional.ofNullable(request.getQueryParameters().get("name")).orElse("World");
 
-        if (name == null) {
-            return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Please pass a name on the query string or in the request body").build();
-        } else {
-            return request.createResponseBuilder(HttpStatus.OK).body("Hello, " + name).build();
+        return request.createResponseBuilder(HttpStatus.OK).body("Hello, " + name).build();
+    }
+
+    /**
+     * This function listens at endpoint "/api/httppost". Invoke it using "curl" command in bash:
+     * curl -d "{\"name\": \"Awesome Developer\", \"age\": \"25\"}" -H "Content-Type: application/json" "http://localhost:7071/api/httppost"
+     */
+    @FunctionName("httppost")
+    public HttpResponseMessage runPost(
+            @HttpTrigger(
+                name = "req",
+                methods = {HttpMethod.POST},
+                authLevel = AuthorizationLevel.FUNCTION)
+                HttpRequestMessage<Optional<String>> request,
+            final ExecutionContext context) {
+        context.getLogger().info("Java HTTP trigger processed a POST request.");
+
+        // Parse request body
+        String name;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.readTree(request.getBody().orElse("{}"));
+            name = Optional.ofNullable(jsonNode.get("name")).map(JsonNode::asText).orElse(null);
+            if (name == null) {
+                return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
+                        .body("Error: 'name' parameter is missing").build();
+            }
+        } catch (Exception e) {
+            context.getLogger().severe("Error parsing request body: " + e.getMessage());
+            return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
+                    .body("Error parsing request body").build();
         }
+
+        return request.createResponseBuilder(HttpStatus.OK).body("Hello, " + name).build();
     }
 }
