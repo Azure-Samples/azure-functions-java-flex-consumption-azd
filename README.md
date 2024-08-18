@@ -24,7 +24,7 @@ The project is designed to run on your local computer, provided you have met the
 + [Using Azure Functions Core Tools (CLI)](#using-azure-functions-core-tools-cli)
 + [Using Visual Studio Code](#using-visual-studio-code)
 + The [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) version 2.4 or later.
-+ The [Java Developer Kit](https://learn.microsoft.com/en-us/azure/developer/java/fundamentals/java-support-on-azure), version 8, 11, 17, 21(Linux only). The JAVA_HOME environment variable must be set to the install location of the correct version of the JDK
++ The [Java Developer Kit](https://learn.microsoft.com/en-us/azure/developer/java/fundamentals/java-support-on-azure) 17, 21(Linux only). The JAVA_HOME environment variable must be set to the install location of the correct version of the JDK
 + [Apache Maven](https://maven.apache.org/), version 3.0 or above.
 
 ### Prerequisites
