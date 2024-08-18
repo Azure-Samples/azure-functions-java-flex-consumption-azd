@@ -65,8 +65,13 @@ mvn clean package
 mvn azure-functions:run
 ```
 
-2) Test a Web hook or GET using the browser to open http://localhost:7071/api/http
+5) Test a Web hook or GET using the browser to open http://localhost:7071/api/httpget
 
+6) Test the HTTP POST trigger in a new terminal window with the following command, or use your favorite REST client, e.g. [RestClient in VS Code](https://marketplace.visualstudio.com/items?itemName=humao.rest-client), PostMan, curl. `test.http` has been provided to run this quickly.
+
+```bash
+curl -d "{\"name\": \"Awesome Developer\", \"age\": \"25\"}" -H "Content-Type: application/json" "http://localhost:7071/api/httppost"
+```
 
 ## Source Code
 
