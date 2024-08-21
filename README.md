@@ -22,10 +22,9 @@ This sample template provides a set of basic HTTP trigger functions in java that
 The project is designed to run on your local computer, provided you have met the [required prerequisites](#prerequisites). You can run the project locally in these environments:
 
 + [Using Azure Functions Core Tools (CLI)](#using-azure-functions-core-tools-cli)
-+ [Using Visual Studio](#using-visual-studio)
 + [Using Visual Studio Code](#using-visual-studio-code)
 + The [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) version 2.4 or later.
-+ The [Java Developer Kit](https://learn.microsoft.com/en-us/azure/developer/java/fundamentals/java-support-on-azure), version 8, 11, 17, 21(Linux only). The JAVA_HOME environment variable must be set to the install location of the correct version of the JDK
++ The [Java Developer Kit](https://learn.microsoft.com/en-us/azure/developer/java/fundamentals/java-support-on-azure) 17, 21(Linux only). The JAVA_HOME environment variable must be set to the install location of the correct version of the JDK
 + [Apache Maven](https://maven.apache.org/), version 3.0 or above.
 
 ### Prerequisites
@@ -40,7 +39,7 @@ The project is designed to run on your local computer, provided you have met the
 
 ```bash
 git clone https://github.com/Azure-Samples/azure-functions-java-flex-consumption-azd.git
-cd /http
+cd azure-functions-java-flex-consumption-azd/http
 ```
 
 2) Add this local.settings.json file to this folder to simplify local development
@@ -66,43 +65,76 @@ mvn clean package
 mvn azure-functions:run
 ```
 
-2) Test a Web hook or GET using the browser to open http://localhost:7071/api/http
+5) Test a Web hook or GET using the browser to open http://localhost:7071/api/httpget
 
+6) Test the HTTP POST trigger in a new terminal window with the following command, or use your favorite REST client, e.g. [RestClient in VS Code](https://marketplace.visualstudio.com/items?itemName=humao.rest-client), PostMan, curl. `test.http` has been provided to run this quickly.
+
+```bash
+curl -d "{\"name\": \"Awesome Developer\", \"age\": \"25\"}" -H "Content-Type: application/json" "http://localhost:7071/api/httppost"
+```
 
 ## Source Code
 
-The key code that makes this work is as follows in `./http/src/main/java/com/Function.java`. This code shows how to handle an ordinary Web hook GET or a POST that sends
-a `name` value in the request body as JSON.  
+The key code that makes tthese functions work is in `http/src/main/java/com/contoso/Function.java`.  The function is identified as an Azure Function by use of the `@FunctionName` and `@HttpTrigger` annotations from the `azure.functions.java.library.version` library in the POM. 
+
+This code shows a HTTP GET triggered function.  
 
 ```java
-public class Function {
-    /**
-     * This function listens at endpoint "/api/HttpExample". Two ways to invoke it using "curl" command in bash:
-     * 1. curl -d "HTTP Body" {your host}/api/HttpExample
-     * 2. curl "{your host}/api/HttpExample?name=HTTP%20Query"
-     */
-    @FunctionName("HttpExample")
-    public HttpResponseMessage run(
-            @HttpTrigger(
-                name = "req",
-                methods = {HttpMethod.GET, HttpMethod.POST},
-                authLevel = AuthorizationLevel.ANONYMOUS)
-                HttpRequestMessage<Optional<String>> request,
-            final ExecutionContext context) {
-        context.getLogger().info("Java HTTP trigger processed a request.");
+/**
+ * This function listens at endpoint "/api/httpget". Invoke it using "curl" command in bash:
+ * curl "http://localhost:7071/api/httpget?name=Awesome%20Developer"
+ */
+@FunctionName("httpget")
+public HttpResponseMessage run(
+        @HttpTrigger(
+            name = "req",
+            methods = {HttpMethod.GET},
+            authLevel = AuthorizationLevel.FUNCTION)
+            HttpRequestMessage<Optional<String>> request,
+        final ExecutionContext context) {
+    context.getLogger().info("Java HTTP trigger processed a request.");
 
-        // Parse query parameter
-        final String query = request.getQueryParameters().get("name");
-        final String name = request.getBody().orElse(query);
+    // Parse query parameter
+    String name = Optional.ofNullable(request.getQueryParameters().get("name")).orElse("World");
 
-        if (name == null) {
-            return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Please pass a name on the query string or in the request body").build();
-        } else {
-            return request.createResponseBuilder(HttpStatus.OK).body("Hello, " + name).build();
-        }
-    }
+    return request.createResponseBuilder(HttpStatus.OK).body("Hello, " + name).build();
 }
+```
+This code shows a HTTP POST triggered function which expects a json object with `name` and `age` values in the request.
 
+```java
+/**
+ * This function listens at endpoint "/api/httppost". Invoke it using "curl" command in bash:
+ * curl -d "{\"name\": \"Awesome Developer\", \"age\": \"25\"}" -H "Content-Type: application/json" "http://localhost:7071/api/httppost"
+ */
+@FunctionName("httppost")
+public HttpResponseMessage runPost(
+        @HttpTrigger(
+            name = "req",
+            methods = {HttpMethod.POST},
+            authLevel = AuthorizationLevel.FUNCTION)
+            HttpRequestMessage<Optional<String>> request,
+        final ExecutionContext context) {
+    context.getLogger().info("Java HTTP trigger processed a POST request.");
+
+    // Parse request body
+    String name;
+    try {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode jsonNode = mapper.readTree(request.getBody().orElse("{}"));
+        name = Optional.ofNullable(jsonNode.get("name")).map(JsonNode::asText).orElse(null);
+        if (name == null) {
+            return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
+                    .body("Error: 'name' parameter is missing").build();
+        }
+    } catch (Exception e) {
+        context.getLogger().severe("Error parsing request body: " + e.getMessage());
+        return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
+                .body("Error parsing request body").build();
+    }
+
+    return request.createResponseBuilder(HttpStatus.OK).body("Hello, " + name).build();
+}
 ```
 
 ## Deploy to Azure
