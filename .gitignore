@@ -13,6 +13,9 @@ buildNumber.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
 
+# local.settings.json gitignore
+local.settings.json
+
 # Eclipse m2e generated files
 # Eclipse Core
 .project
