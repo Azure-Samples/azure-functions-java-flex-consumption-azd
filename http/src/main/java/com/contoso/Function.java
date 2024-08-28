@@ -39,7 +39,7 @@ public class Function {
 
     /**
      * This function listens at endpoint "/api/httppost". Invoke it using "curl" command in bash:
-     * curl -d "{\"name\": \"Awesome Developer\", \"age\": \"25\"}" -H "Content-Type: application/json" "http://localhost:7071/api/httppost"
+     * curl -i -X POST http://localhost:7071/api/httppost -H "Content-Type: text/json" -d "{\"name\": \"Awesome Developer\", \"age\": \"25\"}"
      */
     @FunctionName("httppost")
     public HttpResponseMessage runPost(
@@ -53,13 +53,15 @@ public class Function {
 
         // Parse request body
         String name;
+        Integer age;
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(request.getBody().orElse("{}"));
             name = Optional.ofNullable(jsonNode.get("name")).map(JsonNode::asText).orElse(null);
-            if (name == null) {
+            age = Optional.ofNullable(jsonNode.get("age")).map(JsonNode::asInt).orElse(null);
+            if (name == null || age == null) {
                 return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
-                        .body("Error: 'name' parameter is missing").build();
+                        .body("Please provide both name and age in the request body.").build();
             }
         } catch (Exception e) {
             context.getLogger().severe("Error parsing request body: " + e.getMessage());
@@ -67,6 +69,6 @@ public class Function {
                     .body("Error parsing request body").build();
         }
 
-        return request.createResponseBuilder(HttpStatus.OK).body("Hello, " + name).build();
+        return request.createResponseBuilder(HttpStatus.OK).body("Hello, " + name +"! You are " + age +" years old.").build();
     }
 }
