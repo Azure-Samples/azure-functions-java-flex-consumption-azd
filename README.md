@@ -11,7 +11,7 @@ languages:
 - azdeveloper
 ---
 
-# Starter template for Flex Consumption plan apps | Azure Functions
+# Azure Functions Java HTTP Trigger using AZD
 
 This sample template provides a set of basic HTTP trigger functions in java that are ready to run locally and can be easily deployed to a function app in Azure Functions.  
 
@@ -33,17 +33,18 @@ The project is designed to run on your local computer, provided you have met the
 + Install Maven version 3.0 or above 
 + [Java Developer Kit](https://learn.microsoft.com/en-us/azure/developer/java/fundamentals/java-support-on-azure), version 8, 11, 17, 21(Linux only). The JAVA_HOME environment variable must be set to the install location of the correct version of the JDK
 
-### Run on your local environment
 
-1) Install the above mentioned pre-requisites in your local
+### Get repo on your local machine
 
+Run the following GIT command to clone this repository to your local machine.
 ```bash
 git clone https://github.com/Azure-Samples/azure-functions-java-flex-consumption-azd.git
 cd azure-functions-java-flex-consumption-azd/http
 ```
 
-2) Add this local.settings.json file to this folder to simplify local development
+### Prepare your local environment
 
+Create a file named `local.settings.json` in the `http` folder and add the following:
 ```bash
 {
   "IsEncrypted": false,
@@ -53,25 +54,32 @@ cd azure-functions-java-flex-consumption-azd/http
     }
 }
 ```
-3) Open a new terminal, remain in the path '/http' and do the following to do a clean build:
+
+### Run using Functions (CLI)
+
+1) Open a new terminal and do the following in the `http` folder:
 
 ```bash
 mvn clean package
-```
-
-4) Start the function app
-
-```bash
 mvn azure-functions:run
 ```
 
-5) Test a Web hook or GET using the browser to open http://localhost:7071/api/httpget
+2) Test the HTTP GET trigger using the browser to open http://localhost:7071/api/httpget
 
-6) Test the HTTP POST trigger in a new terminal window with the following command, or use your favorite REST client, e.g. [RestClient in VS Code](https://marketplace.visualstudio.com/items?itemName=humao.rest-client), PostMan, curl. `test.http` has been provided to run this quickly.
+3) Test the HTTP POST trigger using your favorite REST client (e.g. [RestClient in VS Code](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)). `test.http` has been provided to run this quickly.
+Or in a new terminal run the following:
 
 ```bash
-curl -d "{\"name\": \"Awesome Developer\", \"age\": \"25\"}" -H "Content-Type: application/json" "http://localhost:7071/api/httppost"
+curl -i -X POST http://localhost:7071/api/httppost -H "Content-Type: text/json" -d "{\"name\": \"Awesome Developer\", \"age\": \"25\"}"
 ```
+
+### Using Visual Studio Code
+
+1) Open this folder in a new terminal
+2) Open VS Code by entering `code .` in the terminal
+3) Make sure the [Azure Functions extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions) is installed
+4) Press Run/Debug (F5) to run in the debugger (select "Debug anyway" if prompted about local emulater not running) 
+5) Use same approach above to test using an HTTP REST client
 
 ## Source Code
 
