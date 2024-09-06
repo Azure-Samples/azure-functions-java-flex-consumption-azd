@@ -18,7 +18,7 @@ This repository contains an Azure Functions HTTP trigger reference sample writte
 
 <!---[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=575770869)-->
 
-This source code supports the article [Quickstart: Create and deploy functions to Azure Functions using the Azure Developer CLI](https://learn.microsoft.com/azure/azure-functions/create-first-function-azure-developer-cli?pivots=programming-language-java#invoke-the-function-on-azure).
+This source code supports the article [Quickstart: Create and deploy functions to Azure Functions using the Azure Developer CLI](https://learn.microsoft.com/azure/azure-functions/create-first-function-azure-developer-cli?pivots=programming-language-java).
 
 ## Prerequisites
 
@@ -170,7 +170,7 @@ This project is configured to use the `azd provision` command to create a functi
 
     | Parameter | Description |
     | ---- | ---- |
-    | _Environment name_ | An environment that's used to maintain a unique deployment context for your app. You won't be prompted if you created the local project using `azd init`.|
+    | _Environment name_ | An environment that's used to maintain a unique deployment context for your app. You aren't prompted when you created the local project using `azd init`.|
     | _Azure subscription_ | Subscription in which your resources are created.|
     | _Azure location_ | Azure region in which to create the resource group that contains the new Azure resources. Only regions that currently support the Flex Consumption plan are shown.|
 
@@ -202,7 +202,7 @@ You can use Core Tools to package your code and deploy it to Azure from the `tar
         func azure functionapp publish %APP_NAME% 
         ```
 
-    The `azd env get-value` command gets your function app name from the local environment, which is required for deployment using `func azure functionapp publish`. After publish completes sucessfully, Core Tools provides you with the URL endpoints of your new functions, but without the function key values required to access the endpoints. To learn how to obtain these same endpoints along with the required funtion keys, see [Invoke the function on Azure](https://learn.microsoft.com/azure/azure-functions/create-first-function-azure-developer-cli?pivots=programming-language-java#invoke-the-function-on-azure) in the companion article [Quickstart: Create and deploy functions to Azure Functions using the Azure Developer CLI](https://learn.microsoft.com/azure/azure-functions/create-first-function-azure-developer-cli?pivots=programming-language-java#invoke-the-function-on-azure).
+    The `azd env get-value` command gets your function app name from the local environment, which is required for deployment using `func azure functionapp publish`. After publish completes successfully, Core Tools provides you with the URL endpoints of your new functions, but without the function key values required to access the endpoints. To learn how to obtain these same endpoints along with the required function keys, see [Invoke the function on Azure](https://learn.microsoft.com/azure/azure-functions/create-first-function-azure-developer-cli?pivots=programming-language-java#invoke-the-function-on-azure) in the companion article [Quickstart: Create and deploy functions to Azure Functions using the Azure Developer CLI](https://learn.microsoft.com/azure/azure-functions/create-first-function-azure-developer-cli?pivots=programming-language-java).
 
     >[!TIP]
     >If you run these commands in a folder other than `http/target/azure-functions/contoso-functions` your project publishes successfully, but without your function code.
