@@ -18,6 +18,8 @@ This repository contains an Azure Functions HTTP trigger reference sample writte
 
 <!---[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=575770869)-->
 
+This source code supports the article [Quickstart: Create and deploy functions to Azure Functions using the Azure Developer CLI](https://learn.microsoft.com/azure/azure-functions/create-first-function-azure-developer-cli?pivots=programming-language-java#invoke-the-function-on-azure).
+
 ## Prerequisites
 
 + [Java Developer Kit (JDK)](https://learn.microsoft.com/azure/developer/java/fundamentals/java-support-on-azure) version 17:
@@ -200,7 +202,10 @@ You can use Core Tools to package your code and deploy it to Azure from the `tar
         func azure functionapp publish %APP_NAME% 
         ```
 
-    The `azd env get-value` command gets your function app name from the local environment, which is required for deployment using `func azure functionapp publish`. 
+    The `azd env get-value` command gets your function app name from the local environment, which is required for deployment using `func azure functionapp publish`. After publish completes sucessfully, Core Tools provides you with the URL endpoints of your new functions, but without the function key values required to access the endpoints. To learn how to obtain these same endpoints along with the required funtion keys, see [Invoke the function on Azure](https://learn.microsoft.com/azure/azure-functions/create-first-function-azure-developer-cli?pivots=programming-language-java#invoke-the-function-on-azure) in the companion article [Quickstart: Create and deploy functions to Azure Functions using the Azure Developer CLI](https://learn.microsoft.com/azure/azure-functions/create-first-function-azure-developer-cli?pivots=programming-language-java#invoke-the-function-on-azure).
+
+    >[!TIP]
+    >If you run these commands in a folder other than `http/target/azure-functions/contoso-functions` your project publishes successfully, but without your function code.
 
 ## Clean up resources
 
