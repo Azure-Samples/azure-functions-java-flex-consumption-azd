@@ -1,9 +1,10 @@
 ---
-description: This repository contains an Azure Functions HTTP trigger quickstart written in Java and deployed to Azure Functions Flex Consumption using the Azure Developer CLI (AZD). This sample uses managed identity and a virtual network to insure it is secure by default.
+description: This repository contains an Azure Functions HTTP trigger quickstart written in Java and deployed to Azure Functions Flex Consumption using the Azure Developer CLI (AZD). This sample uses managed identity and a virtual network to insure it's secure by default.
 page_type: sample
 products:
 - azure-functions
 - azure
+- entra-id
 urlFragment: starter-http-trigger-java
 languages:
 - java
@@ -13,85 +14,92 @@ languages:
 
 # Azure Functions Java HTTP Trigger using AZD
 
-This sample template provides a set of basic HTTP trigger functions in java that are ready to run locally and can be easily deployed to a function app in Azure Functions.  
+This repository contains an Azure Functions HTTP trigger reference sample written in Java and deployed to Azure using Azure Developer CLI (`azd`). The sample uses managed identity and a virtual network to make sure deployment is secure by default.
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=575770869)
+<!---[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=575770869)-->
 
-## Run in your local environment
+This source code supports the article [Quickstart: Create and deploy functions to Azure Functions using the Azure Developer CLI](https://learn.microsoft.com/azure/azure-functions/create-first-function-azure-developer-cli?pivots=programming-language-java).
 
-The project is designed to run on your local computer, provided you have met the [required prerequisites](#prerequisites). You can run the project locally in these environments:
+## Prerequisites
 
-+ [Using Azure Functions Core Tools (CLI)](#using-azure-functions-core-tools-cli)
-+ [Using Visual Studio Code](#using-visual-studio-code)
-+ The [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) version 2.4 or later.
-+ The [Java Developer Kit](https://learn.microsoft.com/en-us/azure/developer/java/fundamentals/java-support-on-azure) 17, 21(Linux only). The JAVA_HOME environment variable must be set to the install location of the correct version of the JDK
++ [Java Developer Kit (JDK)](https://learn.microsoft.com/azure/developer/java/fundamentals/java-support-on-azure) version 17:
+  + Other supported Java versions require updates to the pom.xml file.
+  + The local `JAVA_HOME` environment variable must be set to the install location of the correct version of the JDK.
 + [Apache Maven](https://maven.apache.org/), version 3.0 or above.
++ [Azure Functions Core Tools](https://learn.microsoft.com/azure/azure-functions/functions-run-local?pivots=programming-language-java#install-the-azure-functions-core-tools)
++ [Azure Developer CLI (`azd`)](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd)
++ To use Visual Studio Code to run and debug locally:
+  + [Visual Studio Code](https://code.visualstudio.com/)
+  + [Azure Functions extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions)
 
-### Prerequisites
+## Initialize the local project
 
-+ [Azure Functions Core Tools](https://learn.microsoft.com/azure/azure-functions/functions-run-local?tabs=v4%2Cmacos%2Ccsharp%2Cportal%2Cbash#install-the-azure-functions-core-tools)
-+ Install Maven version 3.0 or above 
-+ [Java Developer Kit](https://learn.microsoft.com/en-us/azure/developer/java/fundamentals/java-support-on-azure), version 8, 11, 17, 21(Linux only). The JAVA_HOME environment variable must be set to the install location of the correct version of the JDK
+You can initialize a project from this `azd` template in one of these ways:
 
++ Use this `azd init` command from an empty local (root) folder:
 
-### Get repo on your local machine
+    ```shell
+    azd init --template azure-functions-java-flex-consumption-azd
+    ```
 
-Run the following GIT command to clone this repository to your local machine.
-```bash
-git clone https://github.com/Azure-Samples/azure-functions-java-flex-consumption-azd.git
-cd azure-functions-java-flex-consumption-azd/http
-```
+    Supply an environment name, such as `flexquickstart` when prompted. In `azd`, the environment is used to maintain a unique deployment context for your app.
 
-### Prepare your local environment
++ Clone the GitHub template repository locally using the `git clone` command:
 
-Create a file named `local.settings.json` in the `http` folder and add the following:
-```bash
+    ```shell
+    git clone https://github.com/Azure-Samples/azure-functions-java-flex-consumption-azd.git
+    cd azure-functions-java-flex-consumption-azd
+    ```
+
+    You can also clone the repository from your own fork in GitHub.
+
+## Prepare your local environment
+
+Navigate to the `http` app folder and create a file in that folder named _local.settings.json_ that contains this JSON data:
+
+```json
 {
-  "IsEncrypted": false,
-  "Values": {
-    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "FUNCTIONS_WORKER_RUNTIME": "java"
+    "IsEncrypted": false,
+    "Values": {
+        "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+        "FUNCTIONS_WORKER_RUNTIME": "java"
     }
 }
 ```
 
-### Run using Functions (CLI)
+## Run your app from the terminal
 
-1) Open a new terminal and do the following in the `http` folder:
+1. From the `http` folder, run these commands to start the Functions host locally:
 
-```bash
-mvn clean package
-mvn azure-functions:run
-```
+    ```bash
+    mvn clean package
+    mvn azure-functions:run
+    ```
 
-2) Test the HTTP GET trigger using the browser to open http://localhost:7071/api/httpget
+1. From your HTTP test tool in a new terminal (or from your browser), call the HTTP GET endpoint: <http://localhost:7071/api/httpget>
 
-3) Test the HTTP POST trigger using your favorite REST client (e.g. [RestClient in VS Code](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)). `test.http` has been provided to run this quickly.
-Or in a new terminal run the following:
+1. Test the HTTP POST trigger with a payload using your favorite secure HTTP test tool. This example runs in the `http` folder and uses the `curl` tool with payload data from the [`testdata.json`](./src/functions/testdata.json) project file:
 
-```bash
-curl -i -X POST http://localhost:7071/api/httppost -H "Content-Type: text/json" -d "{\"name\": \"Awesome Developer\", \"age\": \"25\"}"
-```
+    ```shell
+    curl -i http://localhost:7071/api/httppost -H "Content-Type: text/json" -d "@src/testdata.json"
+    ```
 
-### Using Visual Studio Code
+1. When you're done, press Ctrl+C in the terminal window to stop the `func.exe` host process.
 
-1) Open this folder in a new terminal
-2) Open VS Code by entering `code .` in the terminal
-3) Make sure the [Azure Functions extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions) is installed
-4) Press Run/Debug (F5) to run in the debugger (select "Debug anyway" if prompted about local emulater not running) 
-5) Use same approach above to test using an HTTP REST client
+## Run your app using Visual Studio Code
+
+1. Open the `http` folder in a new terminal.
+1. Run the `code .` code command to open the project in Visual Studio Code.
+1. Press **Run/Debug (F5)** to run in the debugger.
+1. Send GET and POST requests to the `httpget` and `httppost` endpoints respectively using your HTTP test tool (or browser for `httpget`). If you have the [RestClient](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) extension installed, you can execute requests directly from the [`test.http`](./http/src/test.http) project file.
 
 ## Source Code
 
-The key code that makes tthese functions work is in `http/src/main/java/com/contoso/Function.java`.  The function is identified as an Azure Function by use of the `@FunctionName` and `@HttpTrigger` annotations from the `azure.functions.java.library.version` library in the POM. 
+The source code for the GET and POST functions is found in the [`Function.java`](./http/src/main/java/com/contoso/Function.java) file. The function is identified as an Azure Function by use of the `@FunctionName` and `@HttpTrigger` annotations from the `azure.functions.java.library.version` library in the POM.
 
-This code shows a HTTP GET triggered function.  
+This code defines an HTTP GET triggered function:  
 
 ```java
-/**
- * This function listens at endpoint "/api/httpget". Invoke it using "curl" command in bash:
- * curl "http://localhost:7071/api/httpget?name=Awesome%20Developer"
- */
 @FunctionName("httpget")
 public HttpResponseMessage run(
         @HttpTrigger(
@@ -108,13 +116,10 @@ public HttpResponseMessage run(
     return request.createResponseBuilder(HttpStatus.OK).body("Hello, " + name).build();
 }
 ```
-This code shows a HTTP POST triggered function which expects a json object with `name` and `age` values in the request.
+
+This code defines an HTTP POST triggered function, which expects a JSON payload with `name` and `age` values in the request.
 
 ```java
-/**
- * This function listens at endpoint "/api/httppost". Invoke it using "curl" command in bash:
- * curl -d "{\"name\": \"Awesome Developer\", \"age\": \"25\"}" -H "Content-Type: application/json" "http://localhost:7071/api/httppost"
- */
 @FunctionName("httppost")
 public HttpResponseMessage runPost(
         @HttpTrigger(
@@ -127,13 +132,15 @@ public HttpResponseMessage runPost(
 
     // Parse request body
     String name;
+    Integer age;
     try {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonNode = mapper.readTree(request.getBody().orElse("{}"));
         name = Optional.ofNullable(jsonNode.get("name")).map(JsonNode::asText).orElse(null);
-        if (name == null) {
+        age = Optional.ofNullable(jsonNode.get("age")).map(JsonNode::asInt).orElse(null);
+        if (name == null || age == null) {
             return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
-                    .body("Error: 'name' parameter is missing").build();
+                    .body("Please provide both name and age in the request body.").build();
         }
     } catch (Exception e) {
         context.getLogger().severe("Error parsing request body: " + e.getMessage());
@@ -141,32 +148,69 @@ public HttpResponseMessage runPost(
                 .body("Error parsing request body").build();
     }
 
-    return request.createResponseBuilder(HttpStatus.OK).body("Hello, " + name).build();
+    return request.createResponseBuilder(HttpStatus.OK).body("Hello, " + name +"! You are " + age +" years old.").build();
 }
 ```
 
+## Create Azure resources
+
+This project is configured to use the `azd provision` command to create a function app in a Flex Consumption plan, along with other required Azure resources defined in Bicep files.
+
+1. In the root folder of the project, run this command to create the required Azure resources:
+
+    ```shell
+    azd provision
+    ```
+
+    The root folder contains the `azure.yaml` definition file required by `azd`.
+
+    If you aren't already signed-in, you're asked to authenticate with your Azure account.
+
+1. When prompted, provide these required deployment parameters:
+
+    | Parameter | Description |
+    | ---- | ---- |
+    | _Environment name_ | An environment that's used to maintain a unique deployment context for your app. You aren't prompted when you created the local project using `azd init`.|
+    | _Azure subscription_ | Subscription in which your resources are created.|
+    | _Azure location_ | Azure region in which to create the resource group that contains the new Azure resources. Only regions that currently support the Flex Consumption plan are shown.|
+
 ## Deploy to Azure
 
-### Provision the Azure resources
-The easiest way to provision this app is using the [Azure Dev CLI aka AZD](https://aka.ms/azd). If you open this repo in GitHub CodeSpaces the AZD tooling is already preinstalled.
+You can use Core Tools to package your code and deploy it to Azure from the `target` output folder. 
 
-To provision all resources:
-You will be prompted for Azure subscription, and an Azure location.
+1. Navigate to the app folder equivalent in the `target` output folder:
 
-```bash
-cd /azure-functions-java-flex-consumption-azd
+    ```console
+    cd http/target/azure-functions/contoso-functions
+    ```
 
-azd provision -e "<provide_environment_name>"
-```
-Make a note of AZURE_FUNCTION_NAME from .azure/<environment_name>/.env file
+    This folder should have a host.json file, which indicates that it's the root of your compiled Java function app.
 
-```bash
-export AZURE_FUNCTION_NAME=<function_name_env_file>
-```
+1. Run one of these commands to deploy your compiled Java code project to the new function app resource in Azure using Core Tools:
 
-### To Deploy the application:
+    + **bash**
 
-```bash
-cd http/target/azure-functions/contoso-functions
-func azure functionapp publish $AZURE_FUNCTION_NAME
-```
+        ```bash
+        APP_NAME=$(azd env get-value AZURE_FUNCTION_NAME)
+        func azure functionapp publish $APP_NAME
+        ```
+
+    + **Cmd**
+
+        ```cmd
+        for /f "tokens=*" %i in ('azd env get-value AZURE_FUNCTION_NAME') do set APP_NAME=%i
+        func azure functionapp publish %APP_NAME% 
+        ```
+
+    The `azd env get-value` command gets your function app name from the local environment, which is required for deployment using `func azure functionapp publish`. After publish completes successfully, Core Tools provides you with the URL endpoints of your new functions, but without the function key values required to access the endpoints. To learn how to obtain these same endpoints along with the required function keys, see [Invoke the function on Azure](https://learn.microsoft.com/azure/azure-functions/create-first-function-azure-developer-cli?pivots=programming-language-java#invoke-the-function-on-azure) in the companion article [Quickstart: Create and deploy functions to Azure Functions using the Azure Developer CLI](https://learn.microsoft.com/azure/azure-functions/create-first-function-azure-developer-cli?pivots=programming-language-java).
+
+    >[!TIP]
+    >If you run these commands in a folder other than `http/target/azure-functions/contoso-functions` your project publishes successfully, but without your function code.
+
+## Clean up resources
+
+When you're done working with your function app and related resources, you can use this command to delete the function app and its related resources from Azure and avoid incurring any further costs:
+
+```shell
+azd down
+``` 
