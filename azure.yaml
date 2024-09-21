@@ -4,7 +4,7 @@ name: starter-java-flex-func
 metadata:
   template: functions-quickstart-java-azd@1.0.0
 services:
-  processor:
+  api:
     project: ./http/
     language: java
     host: function

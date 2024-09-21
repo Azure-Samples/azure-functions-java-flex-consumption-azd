@@ -14,7 +14,7 @@ languages:
 
 # Azure Functions Java HTTP Trigger using AZD
 
-This repository contains an Azure Functions HTTP trigger reference sample written in Java and deployed to Azure using Azure Developer CLI (`azd`). The sample uses managed identity and a virtual network to make sure deployment is secure by default.
+This repository contains an Azure Functions HTTP trigger reference sample written in Java and deployed to Azure using Azure Developer CLI (`azd`). The sample uses managed identity and a virtual network to make sure deployment is secure by default. You can opt out of a VNet being used in the sample by setting SKIP_VNET to true in the parameters.
 
 <!---[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=575770869)-->
 
@@ -152,60 +152,37 @@ public HttpResponseMessage runPost(
 }
 ```
 
-## Create Azure resources
-
-This project is configured to use the `azd provision` command to create a function app in a Flex Consumption plan, along with other required Azure resources defined in Bicep files.
-
-1. In the root folder of the project, run this command to create the required Azure resources:
-
-    ```shell
-    azd provision
-    ```
-
-    The root folder contains the `azure.yaml` definition file required by `azd`.
-
-    If you aren't already signed-in, you're asked to authenticate with your Azure account.
-
-1. When prompted, provide these required deployment parameters:
-
-    | Parameter | Description |
-    | ---- | ---- |
-    | _Environment name_ | An environment that's used to maintain a unique deployment context for your app. You aren't prompted when you created the local project using `azd init`.|
-    | _Azure subscription_ | Subscription in which your resources are created.|
-    | _Azure location_ | Azure region in which to create the resource group that contains the new Azure resources. Only regions that currently support the Flex Consumption plan are shown.|
-
 ## Deploy to Azure
 
-You can use Core Tools to package your code and deploy it to Azure from the `target` output folder. 
+Run this command to provision the function app, with any required Azure resources, and deploy your code:
 
-1. Navigate to the app folder equivalent in the `target` output folder:
+```shell
+azd up
+```
 
-    ```console
-    cd http/target/azure-functions/contoso-functions
-    ```
+Alternatively, you can opt-out of a VNet being used in the sample. To do so, use `azd env` to configure `SKIP_VNET` to `true` before running `azd up`:
 
-    This folder should have a host.json file, which indicates that it's the root of your compiled Java function app.
+```bash
+azd env set SKIP_VNET true
+azd up
+```
 
-1. Run one of these commands to deploy your compiled Java code project to the new function app resource in Azure using Core Tools:
+You're prompted to supply these required deployment parameters:
 
-    + **bash**
+| Parameter | Description |
+| ---- | ---- |
+| _Environment name_ | An environment that's used to maintain a unique deployment context for your app. You won't be prompted if you created the local project using `azd init`.|
+| _Azure subscription_ | Subscription in which your resources are created.|
+| _Azure location_ | Azure region in which to create the resource group that contains the new Azure resources. Only regions that currently support the Flex Consumption plan are shown.|
 
-        ```bash
-        APP_NAME=$(azd env get-value AZURE_FUNCTION_NAME)
-        func azure functionapp publish $APP_NAME
-        ```
+After publish completes successfully, `azd` provides you with the URL endpoints of your new functions, but without the function key values required to access the endpoints. To learn how to obtain these same endpoints along with the required function keys, see [Invoke the function on Azure](https://learn.microsoft.com/azure/azure-functions/create-first-function-azure-developer-cli?pivots=programming-language-dotnet#invoke-the-function-on-azure) in the companion article [Quickstart: Create and deploy functions to Azure Functions using the Azure Developer CLI](https://learn.microsoft.com/azure/azure-functions/create-first-function-azure-developer-cli?pivots=programming-language-dotnet).
 
-    + **Cmd**
+## Redeploy your code
 
-        ```cmd
-        for /f "tokens=*" %i in ('azd env get-value AZURE_FUNCTION_NAME') do set APP_NAME=%i
-        func azure functionapp publish %APP_NAME% 
-        ```
+You can run the `azd up` command as many times as you need to both provision your Azure resources and deploy code updates to your function app.
 
-    The `azd env get-value` command gets your function app name from the local environment, which is required for deployment using `func azure functionapp publish`. After publish completes successfully, Core Tools provides you with the URL endpoints of your new functions, but without the function key values required to access the endpoints. To learn how to obtain these same endpoints along with the required function keys, see [Invoke the function on Azure](https://learn.microsoft.com/azure/azure-functions/create-first-function-azure-developer-cli?pivots=programming-language-java#invoke-the-function-on-azure) in the companion article [Quickstart: Create and deploy functions to Azure Functions using the Azure Developer CLI](https://learn.microsoft.com/azure/azure-functions/create-first-function-azure-developer-cli?pivots=programming-language-java).
-
-    >[!TIP]
-    >If you run these commands in a folder other than `http/target/azure-functions/contoso-functions` your project publishes successfully, but without your function code.
+>[!NOTE]
+>Deployed code files are always overwritten by the latest deployment package.
 
 ## Clean up resources
 
@@ -213,4 +190,4 @@ When you're done working with your function app and related resources, you can u
 
 ```shell
 azd down
-``` 
+```
