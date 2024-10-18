@@ -78,20 +78,19 @@ Navigate to the `http` app folder and create a file in that folder named _local.
 
 1. From your HTTP test tool in a new terminal (or from your browser), call the HTTP GET endpoint: <http://localhost:7071/api/httpget>
 
-1. Test the HTTP POST trigger with a payload using your favorite secure HTTP test tool. This example runs in the `http` folder and uses the `curl` tool with payload data from the [`testdata.json`](./http/src/testdata.json) project file:
+1. Test the HTTP POST trigger with a payload using your favorite secure HTTP test tool. This example runs in the `http` folder and uses the `curl` tool with payload data from the [`testdata.json`](./http/testdata.json) project file:
 
     ```shell
-    curl -i http://localhost:7071/api/httppost -H "Content-Type: text/json" -d "@src/testdata.json"
+    curl -i http://localhost:7071/api/httppost -H "Content-Type: text/json" -d "@testdata.json"
     ```
 
 1. When you're done, press Ctrl+C in the terminal window to stop the `func.exe` host process.
 
 ## Run your app using Visual Studio Code
 
-1. Open the `http` folder in a new terminal.
-1. Run the `code .` code command to open the project in Visual Studio Code.
+1. From the root directory run the `code .` code command to open the project in Visual Studio Code.
 1. Press **Run/Debug (F5)** to run in the debugger.
-1. Send GET and POST requests to the `httpget` and `httppost` endpoints respectively using your HTTP test tool (or browser for `httpget`). If you have the [RestClient](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) extension installed, you can execute requests directly from the [`test.http`](./http/src/test.http) project file.
+1. Send GET and POST requests to the `httpget` and `httppost` endpoints respectively using your HTTP test tool (or browser for `httpget`). If you have the [RestClient](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) extension installed, you can execute requests directly from the [`test.http`](./http/test.http) project file.
 
 ## Source Code
 
