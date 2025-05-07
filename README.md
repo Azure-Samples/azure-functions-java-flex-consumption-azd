@@ -16,7 +16,7 @@ languages:
 
 # Azure Functions Java HTTP Trigger using AZD
 
-This repository contains an Azure Functions HTTP trigger reference sample written in Java and deployed to Azure using Azure Developer CLI (`azd`). The sample uses managed identity and a virtual network to make sure deployment is secure by default. You can opt out of a VNet being used in the sample by setting SKIP_VNET to true in the parameters.
+This repository contains an Azure Functions HTTP trigger reference sample written in Java and deployed to Azure using Azure Developer CLI (`azd`). The sample uses managed identity and a virtual network to make sure deployment is secure by default. You can opt out of a VNet being used in the sample by setting VNET_ENABLED to false in the parameters.
 
 <!---[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=575770869)-->
 
@@ -161,10 +161,10 @@ Run this command to provision the function app, with any required Azure resource
 azd up
 ```
 
-Alternatively, you can opt-out of a VNet being used in the sample. To do so, use `azd env` to configure `SKIP_VNET` to `true` before running `azd up`:
+By default, this sample uses a virtual network to ensure your deployment is secure by default. You can opt-out of a VNet being used by setting VNET_ENABLED to false before running `azd up`:
 
 ```bash
-azd env set SKIP_VNET true
+azd env set VNET_ENABLED false
 azd up
 ```
 
