@@ -17,7 +17,7 @@ param identityId string
   'dotnet-isolated', 'node', 'python', 'java', 'powershell', 'custom'
 ])
 param runtimeName string
-@allowed(['3.10', '3.11', '7.4', '8.0', '10', '11', '17', '20'])
+@allowed(['3.10', '3.11', '7.4', '8.0', '10', '11', '17', '20', '21'])
 param runtimeVersion string
 param kind string = 'functionapp,linux'
 
