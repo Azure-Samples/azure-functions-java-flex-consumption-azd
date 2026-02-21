@@ -11,7 +11,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <azure.functions.maven.plugin.version>1.36.0</azure.functions.maven.plugin.version>
         <azure.functions.java.library.version>3.1.0</azure.functions.java.library.version>
         <functionAppName>contoso-functions</functionAppName>
@@ -83,7 +83,7 @@
                     <runtime>
                         <!-- runtime os, could be windows, linux or docker-->
                         <os>linux</os>
-                        <javaVersion>17</javaVersion>
+                        <javaVersion>21</javaVersion>
                     </runtime>
                     <appSettings>
                         <property>

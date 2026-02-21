@@ -59,7 +59,7 @@ module api './app/api.bicep' = {
     applicationInsightsName: monitoring.outputs.applicationInsightsName
     appServicePlanId: appServicePlan.outputs.id
     runtimeName: 'java'
-    runtimeVersion: '17'
+    runtimeVersion: '21'
     storageAccountName: storage.outputs.name
     identityId: apiUserAssignedIdentity.outputs.identityId
     identityClientId: apiUserAssignedIdentity.outputs.identityClientId
