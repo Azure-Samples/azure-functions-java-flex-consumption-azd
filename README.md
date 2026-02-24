@@ -28,6 +28,7 @@ This source code supports the article [Quickstart: Create and deploy functions t
   + Other supported Java versions require updates to the pom.xml file.
   + The local `JAVA_HOME` environment variable must be set to the install location of the correct version of the JDK.
 + [Apache Maven](https://maven.apache.org/), version 3.0 or above.
++ [Azurite](https://learn.microsoft.com/azure/storage/common/storage-use-azurite) (for local storage emulation)
 + [Azure Functions Core Tools](https://learn.microsoft.com/azure/azure-functions/functions-run-local?pivots=programming-language-java#install-the-azure-functions-core-tools)
 + [Azure Developer CLI (`azd`)](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd)
 + To use Visual Studio Code to run and debug locally:
@@ -54,24 +55,20 @@ You can initialize a project from this `azd` template in one of these ways:
     ```
 
     You can also clone the repository from your own fork in GitHub.
+## Local settings
 
-## Prepare your local environment
+The `local.settings.json` file is included in the `http` folder with default values for local development. This file is excluded from deployment by `.funcignore`.
 
-Navigate to the `http` app folder and create a file in that folder named _local.settings.json_ that contains this JSON data:
-
-```json
-{
-    "IsEncrypted": false,
-    "Values": {
-        "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-        "FUNCTIONS_WORKER_RUNTIME": "java"
-    }
-}
-```
 
 ## Run your app from the terminal
 
-1. From the `http` folder, run these commands to start the Functions host locally:
+1. Start Azurite for local storage emulation. In a separate terminal, run:
+
+    ```shell
+    azurite
+    ```
+
+1. From the `http` folder, run these commands to start the Functions host:
 
     ```bash
     mvn clean package
